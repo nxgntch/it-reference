@@ -1,0 +1,217 @@
+"""Budget enforcement with hard stops at organization, team, and invocation levels."""
+
+import logging
+from typing import Dict, Optional
+
+logger = logging.getLogger(__name__)
+
+
+class BudgetExceededError(Exception):
+    """Raised when cost would exceed budget limit."""
+
+    pass
+
+
+class BudgetChecker:
+    """Enforce budget limits across organization, team, and per-invocation."""
+
+    # Default budget configuration (can be overridden via config)
+    DEFAULT_BUDGETS = {
+        "organization": {"monthlyBudget": 10000.0},
+        "teams": {
+            "engineering": {"monthlyBudget": 3000.0, "perInvocationBudget": 2.0},
+            "operations": {"monthlyBudget": 2000.0, "perInvocationBudget": 1.5},
+            "research": {"monthlyBudget": 3000.0, "perInvocationBudget": 2.0},
+        },
+    }
+
+    # Alert thresholds
+    WARNING_THRESHOLD = 0.80  # 80%
+    CRITICAL_THRESHOLD = 0.90  # 90%
+
+    def __init__(self, budgetConfig: Optional[Dict] = None, costTracker=None):
+        """Initialize budget checker.
+
+        Args:
+            budgetConfig: Optional budget configuration dict
+            costTracker: Optional cost tracker for querying spend
+        """
+        self.budgets = budgetConfig or self.DEFAULT_BUDGETS
+        self.costTracker = costTracker
+        self.alerts: Dict[str, list] = {}  # Track alerts per team
+
+    async def canSpend(
+        self, teamId: str, estimatedCost: float = 0.0, agentId: Optional[str] = None
+    ) -> bool:
+        """Check if spend is allowed at all budget levels.
+
+        Args:
+            teamId: Team identifier
+            estimatedCost: Estimated cost of invocation (default 0.0)
+            agentId: Optional agent identifier for logging
+
+        Returns:
+            True if spend is allowed, False if any limit exceeded
+
+        Raises:
+            BudgetExceededError: If spend would exceed hard limit
+        """
+        # 1. Check per-invocation budget
+        if not self._checkPerInvocationBudget(teamId, estimatedCost, agentId):
+            return False
+
+        # 2. Check team monthly budget
+        if not await self._checkTeamBudget(teamId, estimatedCost):
+            return False
+
+        # 3. Check organization monthly budget
+        if not await self._checkOrgBudget(estimatedCost):
+            return False
+
+        return True
+
+    def _checkPerInvocationBudget(
+        self, teamId: str, estimatedCost: float, agentId: Optional[str] = None
+    ) -> bool:
+        """Check per-invocation budget limit.
+
+        Args:
+            teamId: Team identifier
+            estimatedCost: Estimated cost
+            agentId: Optional agent identifier
+
+        Returns:
+            True if within limit, False otherwise
+        """
+        team = self.budgets.get("teams", {}).get(teamId)
+        if not team:
+            logger.warning(f"Unknown team {teamId}, allowing invocation")
+            return True
+
+        perInvocationBudget = team.get("perInvocationBudget", float("inf"))
+
+        if estimatedCost > perInvocationBudget:
+            logger.error(
+                f"Invocation for {agentId or 'agent'} "
+                f"(team {teamId}) exceeds per-invocation limit: "
+                f"${estimatedCost:.4f} > ${perInvocationBudget:.4f}"
+            )
+            return False
+
+        return True
+
+    async def _checkTeamBudget(self, teamId: str, estimatedCost: float) -> bool:
+        """Check team monthly budget.
+
+        Args:
+            teamId: Team identifier
+            estimatedCost: Estimated cost
+
+        Returns:
+            True if within limit, False otherwise
+        """
+        team = self.budgets.get("teams", {}).get(teamId)
+        if not team:
+            return True
+
+        monthlyBudget = team.get("monthlyBudget", float("inf"))
+
+        # Get current team spend (from cost tracker if available)
+        teamSpent = 0.0
+        if self.costTracker:
+            teamSpent = await self.costTracker.getTeamSpentThisMonth(teamId)
+
+        totalSpend = teamSpent + estimatedCost
+
+        if totalSpend > monthlyBudget:
+            logger.error(
+                f"Team {teamId} would exceed monthly budget: "
+                f"${totalSpend:.2f} > ${monthlyBudget:.2f} "
+                f"(currently spent: ${teamSpent:.2f})"
+            )
+            return False
+
+        # Check alert thresholds (log but don't reject)
+        percentUsed = totalSpend / monthlyBudget
+        if percentUsed >= self.CRITICAL_THRESHOLD:
+            logger.warning(
+                f"Team {teamId} budget CRITICAL: "
+                f"{percentUsed*100:.1f}% used (${totalSpend:.2f} of ${monthlyBudget:.2f})"
+            )
+        elif percentUsed >= self.WARNING_THRESHOLD:
+            logger.warning(
+                f"Team {teamId} budget WARNING: "
+                f"{percentUsed*100:.1f}% used (${totalSpend:.2f} of ${monthlyBudget:.2f})"
+            )
+
+        return True
+
+    async def _checkOrgBudget(self, estimatedCost: float) -> bool:
+        """Check organization monthly budget.
+
+        Args:
+            estimatedCost: Estimated cost
+
+        Returns:
+            True if within limit, False otherwise
+        """
+        orgBudget = self.budgets.get("organization", {}).get("monthlyBudget", float("inf"))
+
+        # Get current org spend
+        orgSpent = 0.0
+        if self.costTracker:
+            orgSpent = await self.costTracker.getOrgSpentThisMonth()
+
+        totalSpend = orgSpent + estimatedCost
+
+        if totalSpend > orgBudget:
+            logger.error(
+                f"Organization would exceed monthly budget: "
+                f"${totalSpend:.2f} > ${orgBudget:.2f} "
+                f"(currently spent: ${orgSpent:.2f})"
+            )
+            return False
+
+        # Check alert thresholds
+        percentUsed = totalSpend / orgBudget
+        if percentUsed >= self.CRITICAL_THRESHOLD:
+            logger.warning(
+                f"Organization budget CRITICAL: "
+                f"{percentUsed*100:.1f}% used (${totalSpend:.2f} of ${orgBudget:.2f})"
+            )
+        elif percentUsed >= self.WARNING_THRESHOLD:
+            logger.warning(
+                f"Organization budget WARNING: "
+                f"{percentUsed*100:.1f}% used (${totalSpend:.2f} of ${orgBudget:.2f})"
+            )
+
+        return True
+
+    def getTeamBudget(self, teamId: str) -> float:
+        """Get team monthly budget.
+
+        Args:
+            teamId: Team identifier
+
+        Returns:
+            Monthly budget amount in USD
+        """
+        team = self.budgets.get("teams", {}).get(teamId)
+        return team.get("monthlyBudget", 0.0) if team else 0.0
+
+    def getOrgBudget(self) -> float:
+        """Get organization monthly budget.
+
+        Returns:
+            Monthly budget amount in USD
+        """
+        return self.budgets.get("organization", {}).get("monthlyBudget", 0.0)
+
+    def getTeamBudgets(self) -> Dict[str, float]:
+        """Get all team budgets.
+
+        Returns:
+            Dict mapping team IDs to monthly budgets
+        """
+        teams = self.budgets.get("teams", {})
+        return {teamId: team.get("monthlyBudget", 0.0) for teamId, team in teams.items()}

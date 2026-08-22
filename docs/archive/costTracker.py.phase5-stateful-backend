@@ -1,0 +1,176 @@
+"""Cost tracking and aggregation across teams and agents."""
+
+import logging
+from datetime import datetime
+from typing import Dict, List, Optional
+
+logger = logging.getLogger(__name__)
+
+
+class CostRecord:
+    """A single cost record for an invocation."""
+
+    def __init__(
+        self,
+        agentId: str,
+        teamId: str,
+        model: str,
+        inputTokens: int,
+        outputTokens: int,
+        cost: float,
+        timestamp: Optional[datetime] = None,
+    ):
+        """Initialize cost record.
+
+        Args:
+            agentId: Agent identifier
+            teamId: Team identifier
+            model: Model used
+            inputTokens: Input token count
+            outputTokens: Output token count
+            cost: Cost in USD
+            timestamp: Record timestamp (defaults to now)
+        """
+        self.agentId = agentId
+        self.teamId = teamId
+        self.model = model
+        self.inputTokens = inputTokens
+        self.outputTokens = outputTokens
+        self.cost = cost
+        self.timestamp = timestamp or datetime.utcnow()
+
+
+class CostTracker:
+    """Track costs across teams, agents, and time periods."""
+
+    def __init__(self):
+        """Initialize cost tracker."""
+        self.records: List[CostRecord] = []
+
+    def recordCost(
+        self,
+        agentId: str,
+        teamId: str,
+        model: str,
+        inputTokens: int,
+        outputTokens: int,
+        cost: float,
+    ) -> None:
+        """Record a cost for an invocation.
+
+        Args:
+            agentId: Agent identifier
+            teamId: Team identifier
+            model: Model used
+            inputTokens: Input token count
+            outputTokens: Output token count
+            cost: Cost in USD
+        """
+        record = CostRecord(
+            agentId=agentId,
+            teamId=teamId,
+            model=model,
+            inputTokens=inputTokens,
+            outputTokens=outputTokens,
+            cost=cost,
+        )
+        self.records.append(record)
+        logger.info(
+            f"Recorded cost: agent={agentId}, team={teamId}, "
+            f"cost=${cost:.4f}, model={model}"
+        )
+
+    async def getTeamSpentThisMonth(self, teamId: str) -> float:
+        """Get total team spending for current month.
+
+        Args:
+            teamId: Team identifier
+
+        Returns:
+            Total cost in USD
+        """
+        now = datetime.utcnow()
+        currentMonth = now.strftime("%Y-%m")
+
+        total = 0.0
+        for record in self.records:
+            if record.teamId == teamId:
+                recordMonth = record.timestamp.strftime("%Y-%m")
+                if recordMonth == currentMonth:
+                    total += record.cost
+
+        return total
+
+    async def getOrgSpentThisMonth(self) -> float:
+        """Get total organization spending for current month.
+
+        Returns:
+            Total cost in USD
+        """
+        now = datetime.utcnow()
+        currentMonth = now.strftime("%Y-%m")
+
+        total = 0.0
+        for record in self.records:
+            recordMonth = record.timestamp.strftime("%Y-%m")
+            if recordMonth == currentMonth:
+                total += record.cost
+
+        return total
+
+    async def getAgentSpentThisMonth(self, agentId: str, teamId: str) -> float:
+        """Get total agent spending for current month.
+
+        Args:
+            agentId: Agent identifier
+            teamId: Team identifier
+
+        Returns:
+            Total cost in USD
+        """
+        now = datetime.utcnow()
+        currentMonth = now.strftime("%Y-%m")
+
+        total = 0.0
+        for record in self.records:
+            if record.agentId == agentId and record.teamId == teamId:
+                recordMonth = record.timestamp.strftime("%Y-%m")
+                if recordMonth == currentMonth:
+                    total += record.cost
+
+        return total
+
+    def getTeamCostsByAgent(self, teamId: str) -> Dict[str, float]:
+        """Get cost breakdown by agent for a team.
+
+        Args:
+            teamId: Team identifier
+
+        Returns:
+            Dict mapping agent IDs to costs
+        """
+        now = datetime.utcnow()
+        currentMonth = now.strftime("%Y-%m")
+
+        costs: Dict[str, float] = {}
+        for record in self.records:
+            if record.teamId == teamId:
+                recordMonth = record.timestamp.strftime("%Y-%m")
+                if recordMonth == currentMonth:
+                    if record.agentId not in costs:
+                        costs[record.agentId] = 0.0
+                    costs[record.agentId] += record.cost
+
+        return costs
+
+    def clearRecords(self) -> None:
+        """Clear all records (for testing)."""
+        self.records.clear()
+
+    def getRecordCount(self) -> int:
+        """Get total number of records.
+
+        Returns:
+            Record count
+        """
+        return len(self.records)
