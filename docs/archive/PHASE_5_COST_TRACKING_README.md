@@ -62,15 +62,15 @@ This directory contains **fully-designed, never-used modules** for a future stat
 ### To Review for Phase 5 Planning
 ```bash
 # Read the archived modules to understand the design
-cat docs/archive/budgetChecker.py.phase5-stateful-backend
-cat docs/archive/costTracker.py.phase5-stateful-backend
+cat https://github.com/nxgntch/it-reference/tree/master/docs/archive/budgetChecker.py.phase5-stateful-backend
+cat https://github.com/nxgntch/it-reference/tree/master/docs/archive/costTracker.py.phase5-stateful-backend
 ```
 
 ### To Restore for Phase 5 Implementation
 ```bash
 # Restore files when Phase 5 work begins
-mv docs/archive/budgetChecker.py.phase5-stateful-backend app/core/budgetChecker.py
-mv docs/archive/costTracker.py.phase5-stateful-backend app/core/costTracker.py
+mv https://github.com/nxgntch/it-reference/tree/master/docs/archive/budgetChecker.py.phase5-stateful-backend app/core/budgetChecker.py
+mv https://github.com/nxgntch/it-reference/tree/master/docs/archive/costTracker.py.phase5-stateful-backend app/core/costTracker.py
 
 # Add tests
 # Wire into orchestrator
