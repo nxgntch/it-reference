@@ -1,0 +1,93 @@
+# Approved Skill Updates
+
+Improvements to existing skills based on observations and review.
+
+Format: Each entry is an approved change waiting to be applied.
+
+---
+
+## Template
+
+```yaml
+- observation_id: "obs_2026-08-22_001"
+  status: "approved"  # approved, applied, or rejected
+  skill: "skill-name"
+
+  # What needs to change
+  change:
+    description: "Add CORS validation to security checks"
+    affected_sections: ["cors_validation", "api_security"]
+    estimated_effort: "30 minutes"
+
+  # How to implement
+  implementation:
+    approach: "Add regex pattern detection for allow_origins=['*']"
+    success_criteria: "Skill flags CORS wildcards and suggests explicit list"
+    test_scenarios:
+      - input: "allow_origins=['*']"
+        expected: "CORS misconfiguration detected"
+
+  # Application tracking
+  applied_date: null
+  applied_by: null
+  applied_in_commit: null
+  notes: ""
+```
+
+---
+
+## Approved Changes (Awaiting Implementation)
+
+# (None yet—observations will be added after first review session)
+
+---
+
+## Applied Changes (For Reference)
+
+# (Track completed skill updates here for historical reference)
+
+---
+
+## Rejected Changes (For Reference)
+
+# (Improvements user decided not to apply—reason documented)
+
+---
+
+## How to Use
+
+### Adding an Approved Change
+
+1. Copy the Template above
+2. Fill in details from observation
+3. Add to this file
+4. Commit with message: `chore(observer): approve skill update for {skill_name}`
+
+### Applying an Approved Change
+
+1. Review change in this file
+2. Make the update to the skill
+3. Test that it works
+4. Update this file:
+   - Set `status: "applied"`
+   - Set `applied_date: "2026-08-22"`
+   - Set `applied_by: "christian.salvador210@gmail.com"`
+   - Set `applied_in_commit: "abc123def456..."`
+5. Commit with message: `feat({skill}): {description} (obs_{id})`
+
+### Rejecting a Change
+
+1. Review change in this file
+2. Decide not to apply
+3. Update this file:
+   - Set `status: "rejected"`
+   - Add notes explaining why
+4. Move to "Rejected Changes" section for historical reference
+
+---
+
+## Integration
+
+- Updates here feed into the main skill files in `../.claude/skills/`
+- Applied changes update `observations.jsonl` with completion status
+- Monthly reports track implementation velocity
