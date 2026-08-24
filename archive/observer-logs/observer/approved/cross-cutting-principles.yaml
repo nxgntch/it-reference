@@ -1,0 +1,294 @@
+# Cross-Cutting Principles
+
+Project-wide patterns extracted from observations across multiple sessions.
+
+These are validated automatically whenever skills are created or updated.
+
+---
+
+## Overview
+
+Cross-cutting principles emerge when multiple observations point to the same underlying pattern:
+- **Pattern**: A principle that affects multiple skills or domains
+- **Source**: Approved observations that established this principle
+- **Validation**: New/updated skills checked against this principle
+- **Evolution**: Principles improve as more observations confirm/refine them
+
+---
+
+## Security Principles
+
+### Security-1: Explicit Allow > Implicit Deny Inversion
+
+**Principle**: In security contexts, ALWAYS use explicit allowlists, never wildcards.
+
+**Context**: CORS, URL validation, network policies, role access
+
+**Origin**:
+- obs_2026-08-22_001: CORS misconfiguration (allow_origins=['*'])
+
+**Check Applied To**:
+- security-review skill (CORS validation)
+- deployment-validator (network policy checks)
+- code-review (authorization patterns)
+
+**Validation Rule**:
+```
+IF skill.relates_to(["cors", "url_validation", "network", "access_control"])
+  THEN skill.must_include(allowlist_pattern) AND NOT skill.allows(wildcard_pattern)
+```
+
+**Examples**:
+- ✅ `allow_origins=["https://app.example.com"]`
+- ❌ `allow_origins=["*"]`
+- ✅ `ALLOWED_HOSTS = ["anthropic.com", "openai.com"]`
+- ❌ User-controlled URLs used directly without validation
+
+---
+
+### Security-2: Defense in Depth
+
+**Principle**: Security controls should never depend on a single layer.
+
+**Context**: Authentication, input validation, data protection
+
+**Check Applied To**:
+- security-review (multiple validation layers)
+- code-review (authorization checks)
+
+**Validation Rule**:
+```
+IF skill.relates_to(security)
+  THEN skill.must_include(multiple_independent_checks)
+```
+
+---
+
+## Code Quality Principles
+
+### Quality-1: Clarity Over Cleverness
+
+**Principle**: Code should prioritize readability; avoid over-engineering for hypothetical futures.
+
+**Context**: Variable naming, function complexity, abstraction levels
+
+**Check Applied To**:
+- code-review (style checks)
+- simplify (refactoring recommendations)
+
+**Validation Rule**:
+```
+IF skill.generates_code
+  THEN skill.should_prefer(readable_code) AND NOT skill.should_encourage(clever_hacks)
+```
+
+---
+
+### Quality-2: Type Safety
+
+**Principle**: Use type hints in Python; validate all external inputs with Pydantic.
+
+**Context**: Function signatures, FastAPI endpoints, configuration loading
+
+**Check Applied To**:
+- code-review (type annotations)
+- security-review (input validation)
+- init (template generation)
+
+**Validation Rule**:
+```
+IF skill.language=="python"
+  THEN skill.must_include(type_hints) AND skill.must_validate(external_input)
+```
+
+---
+
+## Development Principles
+
+### Dev-1: Test-Driven Approach
+
+**Principle**: Tests written before or alongside feature code; minimum 85% coverage.
+
+**Context**: All new features and bug fixes
+
+**Check Applied To**:
+- preCommitAuditor (coverage validation)
+- code-review (test presence)
+
+**Validation Rule**:
+```
+IF commit.changes.code_files
+  THEN commit.should_include(test_files) AND coverage >= 0.85
+```
+
+---
+
+### Dev-2: Documentation Colocates with Code
+
+**Principle**: Docstrings on public APIs; comments explain WHY not WHAT.
+
+**Context**: Skill definitions, complex algorithms, business logic
+
+**Check Applied To**:
+- code-review (docstring checks)
+- init (template docstrings)
+
+---
+
+## Operational Principles
+
+### Ops-1: Configuration External to Code
+
+**Principle**: Never hardcode values; all configuration in env vars, YAML, or secrets manager.
+
+**Context**: API keys, database URLs, feature flags, budget caps
+
+**Check Applied To**:
+- security-review (secret detection)
+- security-audit (hardcoding detection)
+- deploymentValidator (config validation)
+
+**Validation Rule**:
+```
+IF code.contains(value_that_could_be_config)
+  AND value.is_not(literal_constant)
+  THEN must_be_externalizable
+```
+
+---
+
+### Ops-2: Fail Fast, Audit Everything
+
+**Principle**: Validation at boundaries; all security decisions logged; startup validation required.
+
+**Context**: API endpoints, configuration loading, permission checks
+
+**Check Applied To**:
+- security-review (input validation)
+- code-review (error handling)
+- deploymentValidator (startup checks)
+
+---
+
+## OWASP Principles (From security.md)
+
+### OWASP-1: Input Validation
+
+**Principle**: Always validate at system boundaries; never trust external input.
+
+**Embedded in**: Security-Review skill, code-review skill, security-audit skill
+
+---
+
+### OWASP-2: No Hardcoded Secrets
+
+**Principle**: Secrets never in code; all in environment variables; rotate quarterly.
+
+**Embedded in**: Security-Review skill, security-audit skill, preCommitAuditor
+
+---
+
+### OWASP-3: Authorization Before Access
+
+**Principle**: Authentication alone is not authorization; check permissions for every resource.
+
+**Embedded in**: Code-Review skill, security-review skill
+
+---
+
+## How Principles Evolve
+
+### Discovery
+1. Multiple observations point to same pattern
+2. Observer flags as "cross-cutting"
+3. Added to this file as "proposed"
+
+### Validation
+1. Run against existing codebase
+2. Confirm principle catches real issues
+3. Validate doesn't create false positives
+
+### Adoption
+1. Status moves to "active"
+2. All skills automatically checked against it
+3. New/updated skills must comply
+
+### Refinement
+1. Observations show edge cases
+2. Principle refined to handle exceptions
+3. Validation rules updated
+
+---
+
+## Current Status
+
+| Principle | Status | First Observed | Observations |
+|-----------|--------|----------------|--------------|
+| Security-1: Explicit Allow | active | 2026-08-22 | 1 |
+| Security-2: Defense in Depth | proposed | N/A | 0 |
+| Quality-1: Clarity | active | ongoing | multiple |
+| Quality-2: Type Safety | active | ongoing | multiple |
+| Dev-1: TDD | active | ongoing | multiple |
+| Ops-1: External Config | active | ongoing | multiple |
+| OWASP-1: Input Validation | active | ongoing | multiple |
+| OWASP-2: No Secrets | active | ongoing | multiple |
+| OWASP-3: Authorization | active | ongoing | multiple |
+
+---
+
+## Validation Automation
+
+When a skill is created/updated:
+```python
+def validateSkillAgainstPrinciples(skill):
+    """Check skill against all active cross-cutting principles."""
+    violations = []
+
+    for principle in load_active_principles():
+        if principle.applies_to(skill):
+            if not principle.validate(skill):
+                violations.append({
+                    "principle": principle.id,
+                    "severity": principle.severity,
+                    "message": principle.check_failed_message
+                })
+
+    if violations:
+        if any(v["severity"] == "critical" for v in violations):
+            raise PrincipleViolationError(violations)
+        else:
+            logger.warning(f"Principle warnings: {violations}")
+
+    return True
+```
+
+---
+
+## Examples
+
+### Applying Security-1 Principle
+
+When security-review skill is updated to check CORS:
+```python
+# Validator checks this skill against Security-1
+principle = load_principle("Security-1")
+
+# Check: Does skill handle CORS?
+if skill.includes_section("cors"):
+    # Check: Does it flag allow_origins=['*']?
+    if principle.validate(skill.cors_section):
+        logger.info("✓ Skill compliant with Security-1")
+    else:
+        raise PrincipleViolationError(
+            f"CORS section doesn't enforce allowlist: {principle.details}"
+        )
+```
+
+---
+
+## References
+
+- Source observations: `logs/observations.jsonl`
+- Skill updates: `approved/skill-updates.yaml`
+- Implementation: `.claude/observer/workflows/validate-principles.py`
+- Related rules: `../.claude/rules/security.md`, `owasp-integration.md`
