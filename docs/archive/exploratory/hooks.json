@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "nxgntch v2.0.1 active. Models: Anthropic. Agents: director, engineeringManager, researchManager. Skills: 23 (code review, security, architecture, research). /nxgntch:help for details."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If source code (not docs): suggest codeReviewer. If tests: suggest codeReviewer."
+          }
+        ]
+      }
+    ]
+  }
+}
