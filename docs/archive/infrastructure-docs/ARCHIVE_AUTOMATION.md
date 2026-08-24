@@ -19,7 +19,7 @@ This keeps the main repository focused on current documentation while preserving
 The system automatically detects when archive files are committed and runs the offload workflow:
 
 ```bash
-git add docs/archive/some-doc.md
+git add https://github.com/nxgntch/it-reference/tree/master/docs/archive/some-doc.md
 git commit -m "chore: archive old documentation"
 # Post-commit hook automatically offloads and updates links
 ```
@@ -50,7 +50,7 @@ bash scripts/archive-workflow.sh --auto   # Execute + auto-commit
 
 **File**: `.git/hooks/post-commit`
 
-**Trigger**: Runs automatically after every commit that touches `docs/archive/`
+**Trigger**: Runs automatically after every commit that touches `https://github.com/nxgntch/it-reference/tree/master/docs/archive/`
 
 **Behavior**:
 - Detects archive changes in the commit
@@ -76,9 +76,9 @@ bash scripts/archive-workflow.sh --auto   # Execute + auto-commit
 
 ```bash
 # Step 1: Move docs to archive
-mkdir -p docs/archive/phase-11-old
-mv docs/old-phase-11-docs.md docs/archive/phase-11-old/
-git add docs/archive/
+mkdir -p https://github.com/nxgntch/it-reference/tree/master/docs/archive/phase-11-old
+mv docs/old-phase-11-docs.md https://github.com/nxgntch/it-reference/tree/master/docs/archive/phase-11-old/
+git add https://github.com/nxgntch/it-reference/tree/master/docs/archive/
 git commit -m "chore: archive old Phase 11 documentation"
 ```
 
@@ -114,8 +114,8 @@ Add new link patterns in configuration:
 
 ```yaml
 link_updates:
-  - from: "docs/archive/my-docs/"
-    to: "https://github.com/nxgntch/it-reference/tree/master/docs/archive/my-docs/"
+  - from: "https://github.com/nxgntch/it-reference/tree/master/docs/archive/my-docs/"
+    to: "https://github.com/nxgntch/it-reference/tree/master/https://github.com/nxgntch/it-reference/tree/master/docs/archive/my-docs/"
     files: ["README.md", "CLAUDE.md"]
 ```
 
@@ -133,10 +133,10 @@ bash scripts/archive-workflow.sh --auto
 
 ```bash
 # Files in main repo
-ls -la docs/archive/
+ls -la https://github.com/nxgntch/it-reference/tree/master/docs/archive/
 
 # Files in reference repo
-ls -la ../it-reference/docs/archive/
+ls -la ../it-reference/https://github.com/nxgntch/it-reference/tree/master/docs/archive/
 ```
 
 ## Logging
@@ -177,19 +177,19 @@ bash scripts/archive-workflow.sh --auto
 
 ### 1. Archive Before Deleting
 
-Always move to `docs/archive/` before deleting:
+Always move to `https://github.com/nxgntch/it-reference/tree/master/docs/archive/` before deleting:
 
 ```bash
-mv docs/old-file.md docs/archive/old-file.md
-git add docs/archive/
+mv docs/old-file.md https://github.com/nxgntch/it-reference/tree/master/docs/archive/old-file.md
+git add https://github.com/nxgntch/it-reference/tree/master/docs/archive/
 git commit -m "chore: archive old file"
 ```
 
 ### 2. Use Descriptive Archive Names
 
 ```
-docs/archive/phase-11-complete-docs/
-docs/archive/session-2026-08-22-planning/
+https://github.com/nxgntch/it-reference/tree/master/docs/archive/phase-11-complete-docs/
+https://github.com/nxgntch/it-reference/tree/master/docs/archive/session-2026-08-22-planning/
 ```
 
 ### 3. Batch Archive Commits
@@ -197,7 +197,7 @@ docs/archive/session-2026-08-22-planning/
 Group related archives together:
 
 ```bash
-git add docs/archive/phase-10/ docs/archive/phase-11-old/
+git add https://github.com/nxgntch/it-reference/tree/master/docs/archive/phase-10/ https://github.com/nxgntch/it-reference/tree/master/docs/archive/phase-11-old/
 git commit -m "chore: archive Phase 10-11 planning docs"
 ```
 
