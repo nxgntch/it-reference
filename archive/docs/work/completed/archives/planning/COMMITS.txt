@@ -1,0 +1,20 @@
+f4d431b docs(phase16): update AUDIT.md with Phase 16 completion metrics
+42ea74d test(phase16): parametrize TestCircularDependencyResolution, TestBackwardCompatibility (Batch 1.7 - FINAL)
+d765810 test(phase16): parametrize TestTokenOptimizerIntegration, TestSingletonFactory, TestTokenEfficiency (Batch 1.6)
+e1a7796 test(phase16): parametrize TestRoutingEngine, TestDirectorAgentDecoupling (Batch 1.5)
+7b49216 test(phase16): parametrize TestLoadTestIntegration, TestOptimizationIntegrationScenarios (Batch 1.4)
+a05f969 test(phase16): parametrize TestIntegrationTestHarness, TestOptimizationVerifier, TestSchedulersSingleton (Batch 1.3)
+01568ed test(phase16): parametrize TestBenchmarkComparison strategy metrics
+3867367 test(phase16): parametrize TestTokenOptimizer, TestBatch*, TestBatchProcessor (Batch 1.2)
+d69ba2c phase 16.5: parametrize TestTokenMetrics tests in performance_optimization_and_batching.py
+6e61529 phase 16.5: parametrize TestThresholdAdaptation tests in performance_optimization_and_batching.py
+d8104db phase 16.5: parametrize TestCapacityPlanner tests in performance_optimization_and_batching.py
+d76d3d9 phase 16.5: parametrize ValidationError tests and fixture naming fixes
+e2b3946 test(phase6): complete parametrization to 100% adoption (6 remaining files)
+c4b57b4 test(phase6): add parametrization to Tier 3 batch 5 (6 files - REACH 80%)
+4024112 test(phase6): add parametrization to Tier 3 batch 4 (4 files)
+c0b6ba0 test(phase6): add parametrization to Tier 3 batch 3 (2 files, final session batch)
+e156887 test(phase6): add parametrization to Tier 3 batch 2 (4 files)
+53ea6bb test(phase6): add parametrization to Tier 3 batch 1 (4 files)
+b82d2ae test(phase6): fix workload type reference in metrics parametrization
+0b33c84 test(phase6): expand parametrization to Tier 2 files
