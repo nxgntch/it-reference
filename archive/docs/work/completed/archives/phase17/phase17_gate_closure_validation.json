@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-08-27T01:09:34.865966",
+  "phase": "17",
+  "week": "5_gate_closure",
+  "validation_type": "final_comprehensive",
+  "initiatives": {
+    "routing": {
+      "mean_ms": 0.006,
+      "min_ms": 0.002,
+      "max_ms": 0.018,
+      "p95_ms": 0.018,
+      "pass": true
+    },
+    "batch": {
+      "results": [
+        {
+          "load": 50,
+          "throughput": 31320.47,
+          "pass": false
+        },
+        {
+          "load": 100,
+          "throughput": 297619.05,
+          "pass": true
+        },
+        {
+          "load": 150,
+          "throughput": 354191.27,
+          "pass": true
+        }
+      ],
+      "aggregate_pass": false
+    },
+    "token": {
+      "total_before": 130,
+      "total_after": 93,
+      "compression_percent": 28.5,
+      "pass": true
+    },
+    "concurrency": {
+      "results": [
+        {
+          "load": 50,
+          "throughput": 156838.14,
+          "scaling": 1.0,
+          "expected": 1.0,
+          "pass": true
+        },
+        {
+          "load": 100,
+          "throughput": 441501.15,
+          "scaling": 2.82,
+          "expected": 1.8,
+          "pass": true
+        },
+        {
+          "load": 150,
+          "throughput": 711574.94,
+          "scaling": 4.54,
+          "expected": 2.5,
+          "pass": true
+        }
+      ],
+      "aggregate_pass": true
+    }
+  },
+  "gate_closure_criteria": {
+    "routing_latency": true,
+    "batch_throughput": false,
+    "token_compression": true,
+    "concurrency_scaling": true
+  },
+  "overall_status": "FAIL"
+}

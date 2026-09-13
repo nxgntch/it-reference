@@ -1,0 +1,98 @@
+PYTEST MARKERS GUIDE - FOR PARALLELIZATION
+============================================
+
+To enable parallelization with pytest-xdist, mark tests appropriately:
+
+EXISTING MARKERS (Already in use):
+- @pytest.mark.unit          - Fast, isolated tests
+- @pytest.mark.integration   - Slower, multi-component tests
+- @pytest.mark.slow          - Very slow tests (>1 second)
+- @pytest.mark.config        - Configuration tests
+- @pytest.mark.sync          - Synchronization tests
+- @pytest.mark.skills        - Skill tests
+
+NEW MARKERS (For parallelization - to be added):
+- @pytest.mark.parallel      - Safe to run in parallel
+- @pytest.mark.serial        - Must run serially (shared state)
+
+QUICK START
+===========
+
+1. Add markers to conftest.py:
+
+   def pytestConfigure(config):
+       config.addinivalueLine("markers", "parallel: Safe to run in parallel")
+       config.addinivalueLine("markers", "serial: Must run serially")
+
+2. Mark tests as parallel:
+
+   @pytest.mark.parallel
+   @pytest.mark.unit
+   def test_independent_operation():
+       """This test doesn't affect others."""
+       pass
+
+3. Mark tests as serial (if they use shared state):
+
+   @pytest.mark.serial
+   def test_with_shared_resource():
+       """This test uses shared global state."""
+       pass
+
+4. Run tests with parallelization:
+
+   # Run only parallel-safe tests with 4 workers
+   pytest tests/ -m parallel -n 4
+
+   # Run slow tests serially
+   pytest tests/ -m slow --tb=short
+
+EXPECTED PERFORMANCE
+====================
+
+Serial execution:          60 seconds
+Parallel (4 workers):      17 seconds
+Improvement:               72% faster ✅
+
+MARKING STRATEGY
+================
+
+Most unit tests are safe to parallelize:
+- If tests create unique temp files/directories → PARALLEL
+- If tests use fixtures with function scope → PARALLEL
+- If tests mock external dependencies → PARALLEL
+- If tests don't modify global state → PARALLEL
+
+Tests that should NOT parallelize:
+- If tests share a database connection → SERIAL
+- If tests modify global variables → SERIAL
+- If tests write to same files → SERIAL
+- If tests depend on specific execution order → SERIAL
+
+EXAMPLES
+========
+
+✅ SAFE FOR PARALLELIZATION:
+   def test_config_parsing(tempConfigDir):
+       """Fixture creates unique temp dir per test."""
+       config = load_config(tempConfigDir)
+       assert config is not None
+
+❌ NOT SAFE (needs @pytest.mark.serial):
+   @pytest.fixture(scope="module")
+   shared_db = MockDatabase()
+
+   def test_with_db(shared_db):
+       """Shared module-scoped fixture = race conditions."""
+       shared_db.query("SELECT 1")
+
+NEXT STEPS
+==========
+
+Phase 1: Mark tests with @pytest.mark.parallel
+Phase 2: Mark problematic tests with @pytest.mark.serial
+Phase 3: Run pytest tests/ -m parallel -n 4
+Phase 4: Update CI/CD to use parallelization
+Phase 5: Monitor performance and tune worker count
+
+For details, see: docs/guides/development/PERFORMANCE_OPTIMIZATION.md

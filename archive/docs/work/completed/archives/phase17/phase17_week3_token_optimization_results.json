@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-08-27T00:46:38.437607",
+  "phase": "17.3",
+  "week": 3,
+  "component": "token_optimization",
+  "optimization_round": "first_pass",
+  "prompts_optimized": [
+    {
+      "agentId": "architect_complex",
+      "tokensBefore": 320,
+      "tokensAfter": 241,
+      "totalSavings": 79,
+      "savingsPercentage": 24.6875,
+      "stages": {
+        "original": 320,
+        "after_boilerplate_removal": 269,
+        "after_example_consolidation": 253,
+        "after_compression": 241,
+        "after_domain_tuning": 241
+      },
+      "stageSavings": {
+        "boilerplate": 51,
+        "examples": 16,
+        "compression": 12,
+        "domain_tuning": 0
+      },
+      "optimizedPrompt": "You are a system architect. Your task is to design and architect a solution. 1. analyze the requirements carefully 2. You will consider all possible approaches 3. evaluate trade-offs between different solutions 4. your design meets all requirements - Follow best practices for software architecture - Ensure high availability and scalability - document all decisions - your attention to these requirements Example 1: Design a REST API Example 2: Design a microservices architecture"
+    },
+    {
+      "agentId": "researcher_verbose",
+      "tokensBefore": 290,
+      "tokensAfter": 245,
+      "totalSavings": 45,
+      "savingsPercentage": 15.517241379310345,
+      "stages": {
+        "original": 290,
+        "after_boilerplate_removal": 273,
+        "after_example_consolidation": 258,
+        "after_compression": 245,
+        "after_domain_tuning": 245
+      },
+      "stageSavings": {
+        "boilerplate": 17,
+        "examples": 15,
+        "compression": 13,
+        "domain_tuning": 0
+      },
+      "optimizedPrompt": "Research Instructions: conduct research on the following topic. You will explore multiple dimensions and analyze findings thoroughly. complete this research task, you shall examine various hypotheses and validate them with evidence. and that, you will consolidate your findings and present them clearly. 1. Identify research questions 2. Formulate hypotheses 3. Gather evidence 4. Analyze results 5. Draw conclusions Example 1: Analyze market trends Example 2: Evaluate performance metrics"
+    },
+    {
+      "agentId": "coordinator_status",
+      "tokensBefore": 244,
+      "tokensAfter": 212,
+      "totalSavings": 32,
+      "savingsPercentage": 13.114754098360656,
+      "stages": {
+        "original": 244,
+        "after_boilerplate_removal": 237,
+        "after_example_consolidation": 224,
+        "after_compression": 212,
+        "after_domain_tuning": 212
+      },
+      "stageSavings": {
+        "boilerplate": 7,
+        "examples": 13,
+        "compression": 12,
+        "domain_tuning": 0
+      },
+      "optimizedPrompt": "Status Update Instructions: provide a detailed status update on your assigned tasks. Task: You are required to report on the following: 1. Current progress on deliverables 2. Blockers or issues encountered 3. Upcoming milestones 4. Resource requirements Format the response with clear sections and include all relevant details. keeping the team informed. Example 1: Weekly status update Example 2: Project completion report"
+    }
+  ],
+  "summary": {
+    "total_prompts": 3,
+    "total_tokens_before": 854,
+    "total_tokens_after": 698,
+    "total_tokens_saved": 156,
+    "overall_savings_percentage": 18.3
+  }
+}

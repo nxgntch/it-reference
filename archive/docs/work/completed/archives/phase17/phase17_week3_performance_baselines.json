@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-08-27T00:41:29.858466",
+  "phase": "17.3",
+  "week": 3,
+  "baseline_type": "performance_pre_optimization",
+  "routing": {
+    "timestamp": "2026-08-27T00:41:29.845788",
+    "phase": "17.3",
+    "week": 3,
+    "component": "routing_engine",
+    "baseline_type": "performance_pre_week2_validation",
+    "test_cases": 6,
+    "individual_latencies": [
+      {
+        "task_num": 1,
+        "task": "Reduce latency in API responses",
+        "selected_team": "engineering",
+        "latency_ms": 0.017
+      },
+      {
+        "task_num": 2,
+        "task": "Optimize cost of batch processing",
+        "selected_team": "operations",
+        "latency_ms": 0.009
+      },
+      {
+        "task_num": 3,
+        "task": "Analyze data patterns in logs",
+        "selected_team": "research",
+        "latency_ms": 0.004
+      },
+      {
+        "task_num": 4,
+        "task": "Design a new microservice architecture",
+        "selected_team": "architecture",
+        "latency_ms": 0.003
+      },
+      {
+        "task_num": 5,
+        "task": "What is the budget status this month?",
+        "selected_team": "operations",
+        "latency_ms": 0.002
+      },
+      {
+        "task_num": 6,
+        "task": "Handle performance issues in the system",
+        "selected_team": "engineering",
+        "latency_ms": 0.002
+      }
+    ],
+    "latency_stats": {
+      "min_ms": 0.002,
+      "max_ms": 0.017,
+      "mean_ms": 0.006,
+      "median_ms": 0.004,
+      "p95_ms": 0.017,
+      "p99_ms": 0.017
+    }
+  },
+  "batch": {
+    "timestamp": "2026-08-27T00:41:29.854726",
+    "phase": "17.3",
+    "week": 3,
+    "component": "batch_processor",
+    "baseline_type": "performance_pre_week2_validation",
+    "scenarios": [
+      {
+        "scenario_name": "light",
+        "task_count": 10,
+        "agent": "coordinator",
+        "complexity": "low",
+        "batches_created": 1,
+        "batching_time_ms": 0.051,
+        "pipeline_time_ms": 1.404,
+        "throughput_tasks_per_sec": 7122.51
+      },
+      {
+        "scenario_name": "medium",
+        "task_count": 25,
+        "agent": "researcher",
+        "complexity": "moderate",
+        "batches_created": 1,
+        "batching_time_ms": 0.031,
+        "pipeline_time_ms": 0.209,
+        "throughput_tasks_per_sec": 119445.76
+      },
+      {
+        "scenario_name": "heavy",
+        "task_count": 50,
+        "agent": "architect",
+        "complexity": "high",
+        "batches_created": 1,
+        "batching_time_ms": 0.056,
+        "pipeline_time_ms": 0.137,
+        "throughput_tasks_per_sec": 365497.09
+      }
+    ],
+    "aggregate": {
+      "total_tasks_processed": 85,
+      "total_time_ms": 1.75,
+      "aggregate_throughput_tasks_per_sec": 48571.43
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-08-27T01:01:22.495600",
+  "phase": "17.4",
+  "week": 4,
+  "component": "token_advanced_optimization",
+  "optimization_round": "advanced_v3",
+  "prompts_optimized": [
+    {
+      "agentId": "architect_complex",
+      "tokensBefore": 320,
+      "tokensAfter": 211,
+      "totalSavings": 109,
+      "savingsPercentage": 34.0625,
+      "stages": {
+        "original": 320,
+        "after_templates": 320,
+        "after_abbreviations": 287,
+        "after_minimize_examples": 251,
+        "after_compression": 216,
+        "after_domain_tuning": 211
+      },
+      "stageSavings": {
+        "templates": 0,
+        "abbreviations": 33,
+        "minimize_examples": 36,
+        "compression": 35,
+        "domain_tuning": 5
+      },
+      "optimizedPrompt": "Instructions: You are a system architect. Your task is to design and architect a solution. req: 1. analyze the req carefully 2. consider all approaches 3. evaluate trade-offs between different solutions 4. Kindly verify that your design meets all req Guidelines: - Follow best practices for software arch - Ensure high avail and scale - document all decisions - for your attention to these req Example 1: Design a REST API"
+    },
+    {
+      "agentId": "researcher_verbose",
+      "tokensBefore": 290,
+      "tokensAfter": 224,
+      "totalSavings": 66,
+      "savingsPercentage": 22.758620689655174,
+      "stages": {
+        "original": 290,
+        "after_templates": 290,
+        "after_abbreviations": 287,
+        "after_minimize_examples": 254,
+        "after_compression": 231,
+        "after_domain_tuning": 224
+      },
+      "stageSavings": {
+        "templates": 0,
+        "abbreviations": 3,
+        "minimize_examples": 33,
+        "compression": 23,
+        "domain_tuning": 7
+      },
+      "optimizedPrompt": "Research Instructions: conduct research on the following topic. explore multiple dimensions and analyze findings thoroughly. Task Description: complete this research task, you must examine various hypotheses and validate them with evidence. Along with that, consolidate your findings and present them clearly. Steps: 1. Identify RQs 2. Formulate hypotheses 3. Gather evidence 4. Analyze results 5. Draw conclusions Example 1: Analyze market trends"
+    },
+    {
+      "agentId": "coordinator_status",
+      "tokensBefore": 244,
+      "tokensAfter": 191,
+      "totalSavings": 53,
+      "savingsPercentage": 21.721311475409834,
+      "stages": {
+        "original": 244,
+        "after_templates": 244,
+        "after_abbreviations": 239,
+        "after_minimize_examples": 207,
+        "after_compression": 191,
+        "after_domain_tuning": 191
+      },
+      "stageSavings": {
+        "templates": 0,
+        "abbreviations": 5,
+        "minimize_examples": 32,
+        "compression": 16,
+        "domain_tuning": 0
+      },
+      "optimizedPrompt": "Status Update Instructions: provide a detailed status update on your assigned tasks. Task: You are required to report on the following: 1. Current progress on deliverables 2. Blockers or issues encountered 3. Upcoming milestones 4. Resource req Format the response with clear sections and include all relevant details. for keeping the team informed. Example 1: Weekly status update"
+    }
+  ],
+  "summary": {
+    "total_prompts": 3,
+    "total_tokens_before": 854,
+    "total_tokens_after": 626,
+    "total_tokens_saved": 228,
+    "overall_savings_percentage": 26.7
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-08-27T00:35:12.507263",
+  "phase": "17.3",
+  "week": 3,
+  "baseline_type": "pre_optimization",
+  "prompts_analyzed": 9,
+  "total_tokens_before": 54,
+  "total_tokens_after": 45,
+  "analysis": {
+    "architect_short": {
+      "agent_id": "architect",
+      "complexity": "short",
+      "tokens_before": 2,
+      "tokens_after": 2,
+      "tokens_saved": 0,
+      "compression_percentage": 0.0,
+      "recommend_compress": false
+    },
+    "architect_medium": {
+      "agent_id": "architect",
+      "complexity": "medium",
+      "tokens_before": 6,
+      "tokens_after": 6,
+      "tokens_saved": 0,
+      "compression_percentage": 0.0,
+      "recommend_compress": false
+    },
+    "architect_verbose": {
+      "agent_id": "architect",
+      "complexity": "verbose",
+      "tokens_before": 12,
+      "tokens_after": 9,
+      "tokens_saved": 3,
+      "compression_percentage": 25.0,
+      "recommend_compress": true
+    },
+    "researcher_short": {
+      "agent_id": "researcher",
+      "complexity": "short",
+      "tokens_before": 2,
+      "tokens_after": 2,
+      "tokens_saved": 0,
+      "compression_percentage": 0.0,
+      "recommend_compress": false
+    },
+    "researcher_medium": {
+      "agent_id": "researcher",
+      "complexity": "medium",
+      "tokens_before": 6,
+      "tokens_after": 6,
+      "tokens_saved": 0,
+      "compression_percentage": 0.0,
+      "recommend_compress": false
+    },
+    "researcher_verbose": {
+      "agent_id": "researcher",
+      "complexity": "verbose",
+      "tokens_before": 10,
+      "tokens_after": 7,
+      "tokens_saved": 3,
+      "compression_percentage": 30.000000000000004,
+      "recommend_compress": true
+    },
+    "coordinator_short": {
+      "agent_id": "coordinator",
+      "complexity": "short",
+      "tokens_before": 1,
+      "tokens_after": 1,
+      "tokens_saved": 0,
+      "compression_percentage": 0.0,
+      "recommend_compress": false
+    },
+    "coordinator_medium": {
+      "agent_id": "coordinator",
+      "complexity": "medium",
+      "tokens_before": 5,
+      "tokens_after": 5,
+      "tokens_saved": 0,
+      "compression_percentage": 0.0,
+      "recommend_compress": false
+    },
+    "coordinator_verbose": {
+      "agent_id": "coordinator",
+      "complexity": "verbose",
+      "tokens_before": 10,
+      "tokens_after": 7,
+      "tokens_saved": 3,
+      "compression_percentage": 30.000000000000004,
+      "recommend_compress": true
+    }
+  },
+  "by_agent": {
+    "architect": {
+      "prompts": 3,
+      "total_tokens_before": 20,
+      "total_tokens_after": 17,
+      "total_saved": 3,
+      "avg_compression": 15.0
+    },
+    "researcher": {
+      "prompts": 3,
+      "total_tokens_before": 18,
+      "total_tokens_after": 15,
+      "total_saved": 3,
+      "avg_compression": 16.7
+    },
+    "coordinator": {
+      "prompts": 3,
+      "total_tokens_before": 16,
+      "total_tokens_after": 13,
+      "total_saved": 3,
+      "avg_compression": 18.8
+    }
+  },
+  "by_complexity": {
+    "short": {
+      "prompts": 3,
+      "total_tokens_before": 5,
+      "avg_compression": 0,
+      "avg_tokens_before": 1.7
+    },
+    "medium": {
+      "prompts": 3,
+      "total_tokens_before": 17,
+      "avg_compression": 0,
+      "avg_tokens_before": 5.7
+    },
+    "verbose": {
+      "prompts": 3,
+      "total_tokens_before": 32,
+      "avg_compression": 0,
+      "avg_tokens_before": 10.7
+    }
+  }
+}
